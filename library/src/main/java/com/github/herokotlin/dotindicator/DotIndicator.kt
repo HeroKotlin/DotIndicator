@@ -12,39 +12,39 @@ class DotIndicator : View {
 
     companion object {
 
-        var DEFAULT_PAGE = 0
+        var DEFAULT_INDEX = 0
 
-        var DEFAULT_TOTAL = 0
+        var DEFAULT_COUNT = 0
 
         var DEFAULT_COLOR = Color.parseColor("#D6D6D6")
 
-        var DEFAULT_TINT_COLOR = Color.parseColor("#FFFFFF")
+        var DEFAULT_ACTIVE_COLOR = Color.parseColor("#FFFFFF")
 
         var DEFAULT_RADIUS = 4
 
-        var DEFAULT_TINT_RADIUS = 4
+        var DEFAULT_ACTIVE_RADIUS = 4
 
         var DEFAULT_GAP = 4
 
     }
 
     // 当前页
-    var page = DEFAULT_PAGE
+    var index = DEFAULT_INDEX
 
     // 总页数
-    var total = DEFAULT_TOTAL
+    var count = DEFAULT_COUNT
 
     // 默认颜色
     var color = DEFAULT_COLOR
 
     // 当前页的颜色
-    var tintColor = DEFAULT_TINT_COLOR
+    var activeColor = DEFAULT_ACTIVE_COLOR
 
     // 圆点的半径
     var radius = DEFAULT_RADIUS
 
     // 当前页圆点的半径
-    var tintRadius = DEFAULT_TINT_RADIUS
+    var activeRadius = DEFAULT_ACTIVE_RADIUS
 
     // 圆点的间距
     var gap = DEFAULT_GAP
@@ -52,13 +52,13 @@ class DotIndicator : View {
     private var contentWidth = 0
 
         get() {
-            return 2 * radius * (total - 1) + 2 * tintRadius + gap * (total - 1)
+            return 2 * radius * (count - 1) + 2 * activeRadius + gap * (count - 1)
         }
 
     private var contentHeight = 0
 
         get() {
-            return 2 * Math.max(tintRadius, radius)
+            return 2 * Math.max(activeRadius, radius)
         }
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -80,9 +80,9 @@ class DotIndicator : View {
         val typedArray = context.obtainStyledAttributes(
                 attrs, R.styleable.DotIndicator, defStyle, 0)
 
-        page = typedArray.getInt(R.styleable.DotIndicator_dot_indicator_page, DEFAULT_PAGE)
+        index = typedArray.getInt(R.styleable.DotIndicator_dot_indicator_index, DEFAULT_INDEX)
 
-        total = typedArray.getInt(R.styleable.DotIndicator_dot_indicator_total, DEFAULT_TOTAL)
+        count = typedArray.getInt(R.styleable.DotIndicator_dot_indicator_count, DEFAULT_COUNT)
 
         color = typedArray.getColor(R.styleable.DotIndicator_dot_indicator_color, DEFAULT_COLOR)
 
@@ -96,11 +96,11 @@ class DotIndicator : View {
             TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_GAP.toFloat(), resources.displayMetrics).toInt()
         )
 
-        tintColor = typedArray.getColor(R.styleable.DotIndicator_dot_indicator_tint_color, DEFAULT_TINT_COLOR)
+        activeColor = typedArray.getColor(R.styleable.DotIndicator_dot_indicator_active_color, DEFAULT_ACTIVE_COLOR)
 
-        tintRadius = typedArray.getDimensionPixelSize(
-            R.styleable.DotIndicator_dot_indicator_tint_radius,
-            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_TINT_RADIUS.toFloat(), resources.displayMetrics).toInt()
+        activeRadius = typedArray.getDimensionPixelSize(
+            R.styleable.DotIndicator_dot_indicator_active_radius,
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ACTIVE_RADIUS.toFloat(), resources.displayMetrics).toInt()
         )
 
         // 获取完 TypedArray 的值后，
@@ -140,7 +140,7 @@ class DotIndicator : View {
 
         super.onDraw(canvas)
 
-        if (total <= 0) {
+        if (count <= 0) {
             return
         }
 
@@ -150,17 +150,20 @@ class DotIndicator : View {
         val centerY = (height / 2).toFloat()
         var dotIndex = 0
         var dotRadius = 0
+        var dotColor = DEFAULT_COLOR
 
-        while (dotIndex < total) {
+        while (dotIndex < count) {
 
-            if (dotIndex == page) {
-                paint.color = tintColor
-                dotRadius = tintRadius
+            if (dotIndex == index) {
+                dotRadius = activeRadius
+                dotColor = activeColor
             }
             else {
-                paint.color = color
                 dotRadius = radius
+                dotColor = color
             }
+
+            paint.color = dotColor
 
             canvas.drawCircle(
                 (startX + dotRadius).toFloat(),
