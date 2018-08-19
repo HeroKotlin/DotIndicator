@@ -15,6 +15,6 @@ Add the dependency
 
 ```
 dependencies {
-    implementation 'com.github.herokotlin:DotIndicator:0.0.1'
+    implementation 'com.github.herokotlin:DotIndicator:0.0.2'
 }
 ```
