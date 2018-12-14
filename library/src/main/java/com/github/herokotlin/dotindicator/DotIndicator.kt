@@ -109,8 +109,6 @@ class DotIndicator : View {
 
     }
 
-
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -146,11 +144,13 @@ class DotIndicator : View {
 
         paint.style = Paint.Style.FILL
 
-        var startX = (width - contentWidth) / 2
         val centerY = (height / 2).toFloat()
+
+        var startX = (width - contentWidth) / 2
         var dotIndex = 0
-        var dotRadius = 0
-        var dotColor = DEFAULT_COLOR
+
+        var dotRadius: Int
+        var dotColor: Int
 
         while (dotIndex < count) {
 
@@ -177,7 +177,6 @@ class DotIndicator : View {
             dotIndex++
 
         }
-
 
     }
 }
