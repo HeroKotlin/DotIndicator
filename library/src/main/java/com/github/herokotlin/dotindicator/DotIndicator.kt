@@ -49,16 +49,16 @@ class DotIndicator : View {
     // 圆点的间距
     var gap = DEFAULT_GAP
 
-    private var contentWidth = 0
+    private val contentWidth: Int
 
         get() {
-            return 2 * radius * (count - 1) + 2 * activeRadius + gap * (count - 1)
+            return 2 * radius * (count - 1) + 2 * activeRadius + gap * (count - 1) + paddingLeft + paddingRight
         }
 
-    private var contentHeight = 0
+    private val contentHeight: Int
 
         get() {
-            return 2 * Math.max(activeRadius, radius)
+            return 2 * Math.max(activeRadius, radius) + paddingTop + paddingBottom
         }
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -122,15 +122,19 @@ class DotIndicator : View {
         var width = widthSize
         var height = heightSize
 
-        if (widthMode != MeasureSpec.EXACTLY) {
+        if (widthMode == MeasureSpec.AT_MOST) {
             width = contentWidth
         }
 
-        if (heightMode != MeasureSpec.EXACTLY) {
+        if (heightMode == MeasureSpec.AT_MOST) {
             height = contentHeight
         }
 
-        setMeasuredDimension(width, height)
+        // super.onMeasure 会把宽高设置为 widthSize 和 heightSize
+        // 如果数值没变化，无需再次调用
+        if (width != widthSize || height != heightSize) {
+            setMeasuredDimension(width, height)
+        }
 
     }
 
@@ -144,9 +148,9 @@ class DotIndicator : View {
 
         paint.style = Paint.Style.FILL
 
-        val centerY = (height / 2).toFloat()
+        val centerY = paddingTop.toFloat() + Math.max(activeRadius, radius)
 
-        var startX = (width - contentWidth) / 2
+        var startX = paddingLeft
         var dotIndex = 0
 
         var dotRadius: Int
